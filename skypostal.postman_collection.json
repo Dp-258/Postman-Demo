@@ -1,0 +1,229 @@
+{
+	"info": {
+		"_postman_id": "3733b96f-9c28-4bec-8e62-0654564065ee",
+		"name": "skypostal",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26107109"
+	},
+	"item": [
+		{
+			"name": "Join the planet",
+			"item": [
+				{
+					"name": "GetUserDataList",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1blpxVFVHOXlzZTNUTVBJSHEyc25BNFhUWURmMlp0K1hYQVpGcTVielBNQnJZNHFWbE1KWHc9PSIsInVzZXJVdWlkIjoieHAxQ0pjS3JOU0IvNXp3bVNNdGl3eW00bVo1UlZFMUxsWmpzYlI1b3Jnd0RyaG5tdi9NMUppdUJaTHV5M3JxcXZpTU41bk5oN2ZtZVluOFhFK2VRZmtTQ21Qd0hGZGNSWGFlR3RGaUU2NzQ9IiwiYXBwS2V5IjoiZDdKTTBxK2E0bzUySkN1aVk5cjJkajFpd1hjeXQ3V1dVSWtXSUdjK3hWTlNSc0pIVHovcTlVUW13TjFvaTBLR29IeTVYNk9BeERZUno3bVZkSFNxcGswdERsc29GM1d2ZExjSE9pWUtxODA9IiwidGtUeXBlIjoiVmxkd0pNNlllYk1xTm9jeFREcVErWjV6NFN3RUNyc1d1WkZ2emNZV1M1SjIrL3RsNDRHbndQMXpWaktvUnRIaCIsImV4cCI6MTcyMTk0ODI1MiwiaXNzIjoiU3R1ZGlvTWlzdC5pbyIsImF1ZCI6IlN0dWRpb01pc3QifQ.GMVKpvfc_xqz6QVM-wx7MqZ4ET8v_e86odT64WSHm_E",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userInfo\": {\r\n        \"user\": {\r\n            \"userId\": 14,\r\n            \"userUuid\": \"4ce432ce-c3fc-494c-8f0e-5f697d9a89d9\"\r\n        },\r\n        \"application\": {\r\n            \"appKey\": \"\"\r\n        }\r\n    } \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://usr.jointheplanet.app/api/User/GetUserDataList",
+							"protocol": "https",
+							"host": [
+								"usr",
+								"jointheplanet",
+								"app"
+							],
+							"path": [
+								"api",
+								"User",
+								"GetUserDataList"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Api Skypostal",
+			"item": [
+				{
+					"name": "Reports",
+					"item": [
+						{
+							"name": "report/rpt-get-avg-days-to-clockstopper",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userInfo\": {\r\n        \"user_code\": 1706,\r\n        \"user_key\": \"aKfGX1cXpYv4B7MymLu8h85vAY1R5m\",\r\n        \"app_key\": null\r\n    },\r\n    \"start_date\": \"/Date(1736398800000)/\",\r\n    \"end_date\": \"/Date(1736830800000)/\",\r\n    \"country_iso_code\": null,\r\n    \"copa_list\": null,\r\n    \"service_provider_code_list\": null\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{dom}}/report/rpt-get-avg-days-to-clockstopper",
+									"host": [
+										"{{dom}}"
+									],
+									"path": [
+										"report",
+										"rpt-get-avg-days-to-clockstopper"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Check partners",
+					"item": [
+						{
+							"name": "[1] Check user_commercial_partner length",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const username = pm.iterationData.get(\"user\");\r",
+											"const password = pm.iterationData.get(\"password\");\r",
+											"let body = {\r",
+											"        username: username,\r",
+											"        password: password\r",
+											"}\r",
+											"pm.variables.set('body', JSON.stringify(body));"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 404) {\r",
+											"    pm.test.skip(\"Skipping test as response code is 404\");\r",
+											"} else {\r",
+											"    pm.test(\"Session user_commercial_partner array is either undefined or has one element or less\", () => {\r",
+											"        const session = pm.response.json();\r",
+											"        if (session.user_commercial_partner !== undefined) {\r",
+											"            pm.expect(session.user_commercial_partner).to.be.an('array').with.length.most(1);\r",
+											"        }\r",
+											"    });\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{{body}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{dom}}/auth/login",
+									"host": [
+										"{{dom}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Provider",
+					"item": [
+						{
+							"name": "provider/status-get-list",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userInfo\": {\r\n        \"user_code\": 1706,\r\n        \"user_key\": \"\",\r\n        \"app_key\": \"\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{dom}}/provider/status-get-list",
+									"host": [
+										"{{dom}}"
+									],
+									"path": [
+										"provider",
+										"status-get-list"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "dom",
+			"value": "http://localhost:3000/",
+			"type": "string"
+		}
+	]
+}
